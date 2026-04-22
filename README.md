@@ -75,4 +75,4 @@ The main goal of this project is to help users make cost-effective decisions by 
 
 ## 👨‍💻 Author
 
-**Darshan Kaladiya**
+**Darshan Kaladiya** - www.linkedin.com/in/darshan-kaladiya-968093346
