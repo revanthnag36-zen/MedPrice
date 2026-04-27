@@ -1,78 +1,51 @@
-# 💊 Medicine Price Comparison System
+
+💊 MedPrice – Medicine Price Comparison System
 
 ## 📌 Overview
-The Medicine Price Comparison System is a web-based application developed using Django that helps users compare medicine prices across multiple online pharmacy platforms. It enables users to find the most affordable option and save money by providing real-time price comparisons.
+**MedPrice** is a web-based Django application that helps users compare medicine prices across multiple online pharmacy platforms in real time.
+
+The system allows users to search medicines or describe symptoms, and instantly find the **most affordable option**, helping them save money on every purchase.
+
+---
 
 ## 🚀 Features
-- 🔍 Search for medicines by name  
-- 🌐 Fetch real-time prices from multiple pharmacy websites  
-- 💰 Identify the lowest price among platforms  
-- 📊 Calculate and display savings percentage  
-- 🖥️ Simple and user-friendly interface  
+
+### 🔍 Smart Search
+- Search medicines directly by name
+- AI-based problem search (e.g. fever → suggested medicines)
+
+### 🌐 Real-Time Price Comparison
+- Fetches live prices from:
+  - Apollo Pharmacy
+  - PharmEasy
+  - NetMeds
+
+### 💰 Cost Optimization
+- Highlights the **lowest price**
+- Shows **percentage savings** across platforms
+
+### 👤 User Authentication
+- Secure login & registration system
+- Personalized user experience
+
+### 📜 Search History
+- Stores user searches
+- One-click re-search from history
+- Option to delete history
+
+### 🎨 Modern UI
+- Clean, responsive interface
+- Futuristic design with smooth UX
+
+---
 
 ## 🛠️ Tech Stack
-- Backend: Python (Django)  
-- Database: SQLite
-- Frontend: HTML, CSS, JavaScript  
-- Web Scraping: SeleniumBase  
 
-## ⚙️ Installation & Setup
+| Layer        | Technology |
+|-------------|-----------|
+| Backend     | Django (Python) |
+| Frontend    | HTML, CSS, JavaScript |
+| Database    | SQLite |
+| Web Scraping| SeleniumBase |
 
-### 1. Clone the repository
-```bash
-git clone <your-repo-url>
-cd Medicine-Price-Comparison
-````
-
-### 2. Create virtual environment
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Apply migrations
-
-```bash
-python manage.py migrate
-```
-
-### 5. Run the development server
-
-```bash
-python manage.py runserver
-```
-
-### 6. Open in browser
-
-```
-http://127.0.0.1:8000/
-```
-
-## 📊 How It Works
-
-1. User enters a medicine name
-2. System scrapes data from multiple pharmacy websites
-3. Prices are compared and processed
-4. The lowest price and savings percentage are displayed
-
-## 🎯 Purpose
-
-The main goal of this project is to help users make cost-effective decisions by comparing medicine prices across different platforms in real time.
-
-## 📌 Future Improvements
-
-* Add more pharmacy platforms
-* Improve scraping speed and accuracy
-* Add user authentication
-* Save search history
-
-## 👨‍💻 Author
-
-**Darshan Kaladiya** - www.linkedin.com/in/darshan-kaladiya-968093346
+---
