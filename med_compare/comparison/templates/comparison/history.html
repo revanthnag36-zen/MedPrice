@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>History // MedPrice</title>
+    <link rel="stylesheet" href="{% static 'comparison/css/style.css' %}">
+</head>
+<body>
+
+<div class="search-card">
+
+    <h1>Your History</h1>
+
+    {% if history %}
+        <div style="margin-top: 20px;">
+
+            {% for item in history %}
+                <div style="
+                    border:1px solid #27272a;
+                    padding:12px;
+                    border-radius:10px;
+                    margin-bottom:10px;
+                    display:flex;
+                    justify-content:space-between;
+                    align-items:center;
+                    cursor:pointer;
+                ">
+
+                    <!-- 🔥 CLICKABLE SEARCH -->
+                    {% if item.search_type == 'medicine' %}
+                        <form action="{% url 'search_medicine' %}" method="POST" style="flex:1;">
+                            {% csrf_token %}
+                            <input type="hidden" name="medicine_name" value="{{ item.query }}">
+                            <button type="submit" style="all:unset; width:100%; cursor:pointer;">
+
+                                <div style="font-weight:600;">
+                                    {{ item.query }}
+                                </div>
+
+                                <div style="font-size:0.7rem; opacity:0.6;">
+                                    medicine • {{ item.searched_at|date:"d M Y, H:i" }}
+                                </div>
+
+                            </button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'search_by_problem' %}" method="POST" style="flex:1;">
+                            {% csrf_token %}
+                            <input type="hidden" name="problem" value="{{ item.query }}">
+                            <button type="submit" style="all:unset; width:100%; cursor:pointer;">
+
+                                <div style="font-weight:600;">
+                                    {{ item.query }}
+                                </div>
+
+                                <div style="font-size:0.7rem; opacity:0.6;">
+                                    problem • {{ item.searched_at|date:"d M Y, H:i" }}
+                                </div>
+
+                            </button>
+                        </form>
+                    {% endif %}
+
+                    <!-- 🔴 DELETE BUTTON -->
+                    <form action="{% url 'delete_history' item.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit"
+                            style="
+                            background: linear-gradient(135deg,#ef4444,#f87171);
+                            border:none;
+                            padding:8px 14px;
+                            border-radius:10px;
+                            color:white;
+                            font-size:0.75rem;
+                            cursor:pointer;">
+                            Delete
+                        </button>
+                    </form>
+
+                </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <p style="margin-top:20px;">No history yet.</p>
+    {% endif %}
+
+    <!-- 🔙 BACK -->
+    <a href="{% url 'home' %}" 
+       style="
+       display:block;
+       text-align:center;
+       margin-top:25px;
+       padding:12px;
+       border-radius:12px;
+       background:linear-gradient(135deg,#6366f1,#8b5cf6);
+       color:white;
+       text-decoration:none;
+       font-weight:600;">
+        Back to Home
+    </a>
+
+</div>
+
+</body>
+</html>

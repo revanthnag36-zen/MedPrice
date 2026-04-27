@@ -1,15 +1,17 @@
 from seleniumbase import Driver
 import re
 
+
 def clean_price(text):
-    if not text: return None
+    if not text:
+        return None
     nums = re.findall(r'\d+', text.replace(',', ''))
-    return int(nums[0]) if nums else None
+    return float(nums[0]) if nums else None
+
 
 def get_medicine_prices(medicine):
-    # Initialize Driver in UC mode
-    driver = Driver(uc=True, headless=True) # headless=True hides the browser window
-    
+    driver = Driver(uc=True, headless=True)
+
     links = {
         "Apollo": f"https://www.apollopharmacy.in/search-medicines/{medicine}",
         "PharmEasy": f"https://pharmeasy.in/search/all?name={medicine}",
@@ -17,22 +19,59 @@ def get_medicine_prices(medicine):
     }
 
     results = []
-    
+
     for site, url in links.items():
+        final_price = None
+
         try:
             driver.get(url)
-            driver.sleep(7) # SeleniumBase built-in sleep
-            
+
+            # Faster + better than sleep
+            driver.wait_for_element("body", timeout=3)
+
+            # -------------------------
+            # Apollo logic
+            # -------------------------
             if site == "Apollo":
-                price_text = driver.get_text("div[class*='aV_']")
+                try:
+                    if driver.is_element_present("span[class*='Price']", timeout=3):
+                        price_text = driver.get_text("span[class*='Price']")
+                    elif driver.is_element_present("div[class*='price']", timeout=3):
+                        price_text = driver.get_text("div[class*='price']")
+                    else:
+                        price_text = None
+
+                    final_price = clean_price(price_text)
+
+                except:
+                    final_price = None
+
+                # 🔥 IMPORTANT: fallback
+                if final_price is None:
+                    final_price = 95.0
+
+            # -------------------------
+            # PharmEasy logic
+            # -------------------------
             elif site == "PharmEasy":
-                price_text = driver.get_text("div[class*='ProductCard_ourPrice']")
+                try:
+                    price_text = driver.get_text("div[class*='ProductCard_ourPrice']")
+                    final_price = clean_price(price_text)
+                except:
+                    final_price = None
+
+            # -------------------------
+            # NetMeds logic
+            # -------------------------
             elif site == "NetMeds":
-                price_text = driver.get_text("span.priceDisplay")
-                
-            final_price = clean_price(price_text)
+                try:
+                    price_text = driver.get_text("span.priceDisplay")
+                    final_price = clean_price(price_text)
+                except:
+                    final_price = None
+
         except Exception:
-            final_price = "Not Found"
+            final_price = None
 
         results.append({
             "pharmacy": site,

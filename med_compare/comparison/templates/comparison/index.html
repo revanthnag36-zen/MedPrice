@@ -7,44 +7,120 @@
     <title>MedPrice // Neural Engine</title>
     <link rel="stylesheet" href="{% static 'comparison/css/style.css' %}">
 </head>
-<body>
-    <div class="search-card">
-        <h1>Med<span style="color: var(--accent);">Price</span></h1>
-        <p>Scan the market. Lock in the best deal. Save on every prescription.</p>
 
-        <form id="searchForm" action="{% url 'search_medicine' %}" method="POST" onsubmit="showLoading()">
+<body>
+
+<!-- 🔥 TOP RIGHT AUTH -->
+<div style="position: fixed; top: 25px; right: 40px; display: flex; gap: 12px; align-items: center; z-index: 1000;">
+
+    {% if user.is_authenticated %}
+
+        <span style="font-size: 0.8rem; opacity: 0.7;">
+            {{ user.username }}
+        </span>
+
+        <!-- History -->
+        <a href="{% url 'history' %}" 
+           style="text-decoration:none; font-size:0.85rem; border:1px solid #27272a; padding:10px 18px; border-radius:12px;">
+            History
+        </a>
+
+        <!-- Logout (FIXED POST) -->
+        <form action="{% url 'logout' %}" method="POST" style="margin:0;">
             {% csrf_token %}
-            <div class="input-group">
-                <input type="text" name="medicine_name" placeholder="Search medication (e.g. Dolo 650mg)" required autofocus>
-            </div>
-            <button type="submit">OPTIMIZE PRICING</button>
+            <button type="submit"
+                style="
+                font-size:0.85rem;
+                font-weight:600;
+                background: linear-gradient(135deg,#ef4444,#f87171);
+                color:#fff;
+                padding:10px 20px;
+                border-radius:12px;
+                border:none;
+                cursor:pointer;">
+                Logout
+            </button>
         </form>
 
-        <div id="loading" style="display:none; text-align: center; margin-top: 30px;">
-            <div class="bar-loader">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-            <p style="font-size: 0.75rem; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent);">
-                Syncing live market price...
-            </p>
-        </div>
-    </div>
+    {% else %}
 
-    <script>
-        function showLoading() {
-            document.getElementById('searchForm').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-        }
-        
-        // Ensures UI resets if user hits 'Back' in browser
-        window.onpageshow = function(event) {
-            if (event.persisted) {
-                document.getElementById('searchForm').style.display = 'block';
-                document.getElementById('loading').style.display = 'none';
-            }
-        };
-    </script>
+        <!-- Login -->
+        <a href="{% url 'login' %}" 
+           style="text-decoration:none; font-size:0.85rem; font-weight:600; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; padding:10px 20px; border-radius:12px;">
+            Login
+        </a>
+
+        <!-- Signup -->
+        <a href="{% url 'register' %}" 
+           style="text-decoration:none; font-size:0.85rem; font-weight:600; background:#2ecc71; color:#fff; padding:10px 20px; border-radius:12px;">
+            Sign Up
+        </a>
+
+    {% endif %}
+
+</div>
+
+
+<!-- 🔹 MAIN CARD -->
+<div class="search-card">
+    <h1>Med<span style="color: var(--accent);">Price</span></h1>
+    <p>Scan the market. Lock in the best deal. Save on every prescription.</p>
+
+    <!-- Medicine Search -->
+    <form id="medicineForm" action="{% url 'search_medicine' %}" method="POST" onsubmit="showLoading()">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="medicine_name" placeholder="Search medicine OR describe your problem">
+        </div>
+        <button type="submit">SEARCH MEDICINE</button>
+    </form>
+
+    <!-- OR -->
+    <div style="text-align:center; margin: 15px 0; opacity:0.6;">OR</div>
+
+    <!-- Problem Search -->
+    <form id="problemForm" action="{% url 'search_by_problem' %}" method="POST" onsubmit="showLoading()">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="problem" placeholder="Enter your problem (e.g. fever, headache)">
+        </div>
+        <button type="submit" style="background: #2ecc71;">SMART SUGGEST</button>
+    </form>
+
+    <!-- Hint -->
+    <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.6;">
+        You can search by medicine name or describe your problem
+    </p>
+
+    <!-- Loading -->
+    <div id="loading" style="display:none; text-align: center; margin-top: 30px;">
+        <div class="bar-loader">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+        <p style="font-size: 0.75rem; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent);">
+            Analyzing & fetching best prices...
+        </p>
+    </div>
+</div>
+
+
+<script>
+function showLoading() {
+    document.getElementById('medicineForm').style.display = 'none';
+    document.getElementById('problemForm').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+}
+
+window.onpageshow = function(event) {
+    if (event.persisted) {
+        document.getElementById('medicineForm').style.display = 'block';
+        document.getElementById('problemForm').style.display = 'block';
+        document.getElementById('loading').style.display = 'none';
+    }
+};
+</script>
+
 </body>
 </html>

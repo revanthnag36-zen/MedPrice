@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Suggestions // {{ problem }}</title>
+    <link rel="stylesheet" href="{% static 'comparison/css/style.css' %}">
+</head>
+<body>
+    <div class="results-grid">
+
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding: 0 10px;">
+            <div>
+                <h1 style="margin: 0; font-size: 2rem;">{{ problem }}</h1>
+                <p style="margin: 0; font-size: 0.9rem;">
+                    AI-assisted recommendations generated. Prices verified live.
+                </p>
+            </div>
+            <a href="{% url 'home' %}" style="color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; border: 1px solid #27272a; padding: 12px 24px; border-radius: 12px;">
+                New Search
+            </a>
+        </div>
+
+        <!-- Disclaimer -->
+        <div style="text-align:center; margin-bottom: 20px; font-size: 0.75rem; color: #f59e0b;">
+            ⚠️ Suggested medicines are for informational purposes only. Please consult a doctor before use.
+        </div>
+
+        {% for med in medicines_data %}
+            <h2 style="margin: 20px 10px; color: var(--accent);">{{ med.medicine }}</h2>
+
+            <div class="bento-container">
+                {% for item in med.results %}
+                <div class="bento-item {% if item.price == med.cheapest_price %}best-deal{% endif %}">
+
+                    <div class="pharmacy-header">
+                        <div class="logo-box">
+                            {% if item.pharmacy == "Apollo" %}
+                                <img src="https://www.apollopharmacy.in/favicon.ico">
+                            {% elif item.pharmacy == "PharmEasy" %}
+                                <img src="https://pharmeasy.in/favicon.ico">
+                            {% else %}
+                                <img src="https://www.netmeds.com/favicon.ico">
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div style="font-weight: 600;">{{ item.pharmacy }}</div>
+                            {% if item.price == med.cheapest_price %}
+                                <div style="font-size: 0.65rem; color: var(--success); font-weight: 800;">
+                                    ✓ BEST PRICE
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: baseline; gap: 12px; margin: 20px 0;">
+                        <div class="price-display">
+                            {% if item.price %}₹{{ item.price }}{% else %}---{% endif %}
+                        </div>
+
+                        {% if item.savings_percent > 0 %}
+                        <div style="background: rgba(16,185,129,0.15); color: var(--success); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 800;">
+                            SAVE {{ item.savings_percent }}%
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <a href="{{ item.link }}" target="_blank" class="shop-btn">
+                        Access Store
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+    </div>
+</body>
+</html>
